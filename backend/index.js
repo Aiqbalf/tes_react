@@ -58,6 +58,58 @@ app.post('/login', (req, res) => {
   );
 });
 
+app.get('/user/:username', (req, res) => {
+  const { username } = req.params;
+
+  db.query(
+    'SELECT username, deskripsi FROM users WHERE username=?',
+    [username],
+    (err, result) => {
+      if (err) return res.send(err);
+      res.send(result[0]);
+    }
+  );
+});
+
+app.put('/update-username', (req, res) => {
+  const { oldUsername, newUsername } = req.body;
+
+  db.query(
+    'UPDATE users SET username=? WHERE username=?',
+    [newUsername, oldUsername],
+    (err, result) => {
+      if (err) return res.send(err);
+      res.send("Username berhasil diupdate");
+    }
+  );
+});
+
+app.put('/update-deskripsi', (req, res) => {
+  const { username, deskripsi } = req.body;
+
+  db.query(
+    'UPDATE users SET deskripsi=? WHERE username=?',
+    [deskripsi, username],
+    (err, result) => {
+      if (err) return res.send(err);
+      res.send("Deskripsi berhasil disimpan");
+    }
+  );
+});
+
+app.put('/delete-deskripsi', (req, res) => {
+  const { username } = req.body;
+
+  db.query(
+    'UPDATE users SET deskripsi=NULL WHERE username=?',
+    [username],
+    (err, result) => {
+      if (err) return res.send(err);
+      res.send("Deskripsi dihapus");
+    }
+  );
+});
+
 app.listen(3001, () => {
   console.log("Server running di port 3001");
 });
